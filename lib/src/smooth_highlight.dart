@@ -10,6 +10,7 @@ class SmoothHighlight extends StatefulWidget {
     this.padding = EdgeInsets.zero,
     this.initialHighlightDelay = Duration.zero,
     this.animationDuration = const Duration(milliseconds: 500),
+    this.animationCurve = Curves.easeInOut,
   });
 
   /// Highlight target widget.
@@ -43,6 +44,11 @@ class SmoothHighlight extends StatefulWidget {
   /// Default to 500ms.
   final Duration animationDuration;
 
+  /// Animation curve.
+  ///
+  /// Default to Curves.easeInOut.
+  final Curve animationCurve;
+
   /// The padding of the highlight.
   final EdgeInsets padding;
 
@@ -55,11 +61,11 @@ class _SmoothHighlightState extends State<SmoothHighlight>
   bool _disposed = false;
   late final _animationController = AnimationController(
     vsync: this,
-    duration:  widget.animationDuration,
+    duration: widget.animationDuration,
   );
   late final Animation<Decoration> _animation = _animationController
       .drive(
-        CurveTween(curve: Curves.easeInOut),
+        CurveTween(curve: widget.animationCurve),
       )
       .drive(
         DecorationTween(
