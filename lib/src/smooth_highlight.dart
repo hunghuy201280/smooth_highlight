@@ -8,6 +8,8 @@ class SmoothHighlight extends StatefulWidget {
     this.enabled = true,
     this.useInitialHighLight = false,
     this.padding = EdgeInsets.zero,
+    this.initialHighlightDelay = Duration.zero,
+    this.animationDuration = const Duration(milliseconds: 500),
   });
 
   /// Highlight target widget.
@@ -31,6 +33,16 @@ class SmoothHighlight extends StatefulWidget {
   /// If true, the highlight will be applied to the child in initState phase. default to false.
   final bool useInitialHighLight;
 
+  /// Delay duration for initial highlight.
+  ///
+  /// If set, the initial highlight will be delayed. default to Duration.zero.
+  final Duration initialHighlightDelay;
+
+  /// Animation duration.
+  ///
+  /// Default to 500ms.
+  final Duration animationDuration;
+
   /// The padding of the highlight.
   final EdgeInsets padding;
 
@@ -43,7 +55,7 @@ class _SmoothHighlightState extends State<SmoothHighlight>
   bool _disposed = false;
   late final _animationController = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 500),
+    duration:  widget.animationDuration,
   );
   late final Animation<Decoration> _animation = _animationController
       .drive(
@@ -62,7 +74,8 @@ class _SmoothHighlightState extends State<SmoothHighlight>
   void initState() {
     super.initState();
     if (widget.useInitialHighLight) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        await Future.delayed(widget.initialHighlightDelay);
         _animationController.forward();
       });
     }
