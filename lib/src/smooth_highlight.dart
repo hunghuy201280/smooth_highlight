@@ -10,7 +10,7 @@ class SmoothHighlight extends StatefulWidget {
     this.padding = EdgeInsets.zero,
     this.initialHighlightDelay = Duration.zero,
     this.animationDuration = const Duration(milliseconds: 500),
-    this.animationCurve = Curves.easeInOut,
+    this.animationCurve = Curves.easeInOut, this.onComplete,
   });
 
   /// Highlight target widget.
@@ -48,6 +48,10 @@ class SmoothHighlight extends StatefulWidget {
   ///
   /// Default to Curves.easeInOut.
   final Curve animationCurve;
+  /// This callback is called when animation is completed.
+  ///
+  /// Default to null.
+  final VoidCallback? onComplete;
 
   /// The padding of the highlight.
   final EdgeInsets padding;
@@ -92,6 +96,7 @@ class _SmoothHighlightState extends State<SmoothHighlight>
         // `called after AnimationController.dispose() AnimationController methods should not be used after calling dispose.`
         if (!_disposed) {
           await _animationController.reverse();
+          widget.onComplete?.call();
         }
       }
     });
